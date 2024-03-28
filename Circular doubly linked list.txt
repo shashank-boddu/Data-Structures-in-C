@@ -1,0 +1,266 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct Node
+{
+    int data;
+    struct Node *prev;
+    struct Node *next;
+};
+struct Node *Head = NULL;
+struct Node *Tail = NULL;
+struct Node* Create_Node(int data)
+{
+    struct Node *newnode;
+    newnode = (struct Node*)malloc(1*sizeof(struct Node));
+    newnode->data = data;
+    newnode->next = NULL;
+    newnode->prev = NULL;
+    return newnode;
+}
+
+void Insertion_At_End(int data)
+{
+    struct Node *newnode = Create_Node(data);
+    if(Head == NULL)
+    {
+        Head = newnode;
+        Tail = newnode;
+    }
+    else
+    {
+        newnode->prev = Tail;
+        Tail->next = newnode;
+        Tail = newnode;
+    }
+    Tail->next = Head;
+    Head->prev = Tail;
+}
+
+void Insertion_At_Begin(int data)
+{
+    struct Node *newnode = Create_Node(data);
+    if(Head == NULL)
+    {
+        Head = newnode;
+        Tail = newnode;
+    }
+    else
+    {
+        newnode->next = Head;
+        Head->prev = newnode;
+        Head = newnode;
+    }
+    Tail->next = Head;
+    Head->prev = Tail;
+}
+
+void Insertion_At_pos(int data,int pos)
+{
+    struct Node *newnode = Create_Node(data);
+    if(Head == NULL)
+    {
+        Head = newnode;
+        Tail = newnode;
+        Tail->next = Head;
+        Head->prev = Tail;
+    }
+    else if(pos == 1)
+    {
+        newnode->next = Head;
+        Head->prev = newnode;
+        Head = newnode;
+        Tail->next = Head;
+        Head->prev = Tail;
+    }
+    else
+    {
+        struct Node * temp = Head;
+        while(pos-2)
+        {
+            temp = temp->next;
+            pos--;
+        }
+        newnode->next = temp->next;
+        newnode->prev = temp;
+        temp->next = newnode;
+        temp->next->prev = newnode;
+    }
+}
+
+void Deletion_At_End()
+{
+    struct Node *del;
+    if(Head == NULL)
+    {
+        printf("\nList is empty");
+    }
+    else if(Tail->next == Tail)
+    {
+        del = Tail;
+        Head = NULL;
+        Tail = NULL;
+        free(del);
+    }
+    else
+    {
+        del = Tail;
+        Tail = Tail->prev;
+        Tail->next = Head;
+        Head->prev = Tail;
+        free(del);
+    }
+}
+
+void Deletion_At_Begin()
+{
+    struct Node *del;
+    if(Head == NULL)
+    {
+        printf("\nList is empty");
+    }
+    else if(Head->next == Head)
+    {
+        del = Head;
+        Head = NULL;
+        Tail = NULL;
+        free(del);
+    } 
+    else
+    {
+        del = Head;
+        Head = Head->next;
+        Head->prev = Tail;
+        Tail->next = Head;
+        free(del);
+    }
+}
+
+void Deletion_At_pos(int pos)
+{
+    struct Node *del;
+    if(Head == NULL)
+    {
+        printf("\nList is empty");
+    }
+    else if(pos == 1)
+    {
+        del = Head;
+        Head = Head->next;
+        Head->prev = Tail;
+        Tail->next = Head;
+        free(del);
+    }
+    else
+    {
+        struct Node *temp = Head;
+        while(pos-2)
+        {
+            temp = temp->next;
+            pos--;
+        }
+        del = temp->next;
+        temp->next = temp->next->next;
+        temp->next->prev = temp;
+        free(del);
+    }
+}
+
+void Display()
+{
+    struct Node *temp = Head;
+    printf("\nDisplay:-\n");
+    while(temp->next != Head)
+    {
+        printf("%ld\t%d\t%ld\n",temp->prev,temp->data,temp->next);
+        temp = temp->next;
+    }
+    printf("%ld\t%d\t%ld\n",temp->prev,temp->data,temp->next);
+}
+void Reverse_Display()
+{
+    struct Node *temp = Tail;
+    printf("\nReverse Display:-\n");
+    while(temp->prev != Tail)
+    {
+        printf("%ld\t%d\t%ld\n",temp->prev,temp->data,temp->next);
+        temp = temp->prev;
+    }
+    printf("%ld\t%d\t%ld\n",temp->prev,temp->data,temp->next);
+}
+int main()
+{
+    printf("-----------------WELCOME-----------------");
+    printf("\nEnter 1 for Insertion At End :- ");
+    printf("\nEnter 2 for Insertion At Begining :- ");
+    printf("\nEnter 3 for Insertion At Position :- ");
+    printf("\nEnter 4 for Deletion At End :- ");
+    printf("\nEnter 5 for Deletion At Begining :- ");
+    printf("\nEnter 6 for Deletion At Position :- ");
+    printf("\nEnter 7 for Displaying the List :- ");
+    printf("\nEnter -1 for Exiting the Program :- ");
+    int input,data, pos;
+    printf("\nEnter the desired input :- ");
+    scanf("%d",&input);
+    while(input!=-1)
+    {
+        switch(input)
+        {
+            case 1:
+            {
+                printf("Enter the data to insert :- ");
+                scanf("%d",&data);
+                Insertion_At_End(data);
+                printf("%d is Inserted at End of list",data);
+                break;
+            }
+            case 2:
+            {
+                printf("Enter the data to insert :- ");
+                scanf("%d",&data);
+                Insertion_At_Begin(data);
+                printf("%d is Inserted at Begining of list",data);
+                break;
+            }
+            case 3:
+            {
+                printf("Enter the data & Position to insert :- ");
+                scanf("%d%d",&data,&pos);
+                Insertion_At_pos(data,pos);
+                printf("%d is Inserted at Position %d in the list ",data,pos);
+                break;
+            }
+            case 4:
+            {
+                Deletion_At_End();
+                break;
+            }
+            case 5:
+            {
+                Deletion_At_Begin();
+                break;
+            }
+            case 6:
+            {
+                printf("Enter the Position to Delete :- ");
+                scanf("%d",&pos);
+                Deletion_At_pos(pos);
+                break;
+            }
+            case 7:
+            {
+                Display();
+                Reverse_Display();
+                break;
+            }
+            default:
+            {
+                printf("Enter Valid Input");
+                break;
+            }
+        }
+        printf("\nEnter the desired input :- ");
+        scanf("%d",&input);
+    }
+    printf("Program Terminated ..!");
+    return 0;
+}
